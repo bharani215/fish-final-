@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fish Type Predictor</title>
+    <style>
+        body { font-family: Arial, sans-serif; text-align: center; margin: 50px; }
+        .container { max-width: 400px; margin: auto; padding: 20px; border: 1px solid #ccc; border-radius: 10px; }
+        input { width: 100%; padding: 10px; margin: 10px 0; }
+        button { padding: 10px 20px; background-color: #28a745; color: white; border: none; cursor: pointer; }
+        button:hover { background-color: #218838; }
+        #result { margin-top: 20px; font-weight: bold; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Fish Type Predictor</h2>
+        <label for="ph">pH Value:</label>
+        <input type="number" id="ph" step="0.1" required>
+        <label for="temperature">Temperature (°C):</label>
+        <input type="number" id="temperature" step="0.1" required>
+        <label for="turbidity">Turbidity:</label>
+        <input type="number" id="turbidity" step="0.1" required>
+        <button onclick="predictFish()">Predict</button>
+        <div id="result"></div>
+    </div>
+    <script>
+        function predictFish() {
+            let ph = document.getElementById("ph").value;
+            let temperature = document.getElementById("temperature").value;
+            let turbidity = document.getElementById("turbidity").value;
+
+            fetch("http://127.0.0.1:5000/predict", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ ph: ph, temperature: temperature, turbidity: turbidity })
+            })
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById("result").innerText = "Predicted Fish Type: " + data.fish;
+            })
+            .catch(error => console.error("Error:", error));
+        }
+    </script>
+</body>
+</html>
